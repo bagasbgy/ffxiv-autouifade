@@ -1,0 +1,12 @@
+<Project Sdk="Dalamud.NET.Sdk/15.0.0">
+  <PropertyGroup>
+    <Version>0.1.0</Version>
+    <Author>R. Dimas Bagas Herlambang</Author>
+    <Name>Auto UI Fade</Name>
+    <Punchline>Fades hotbars until they are needed.</Punchline>
+    <Description>Fades selected native FFXIV hotbars, job gauges, parameter bars, and the experience bar to a configurable opacity while idle and restores them for hover, combat, weapon draw, crafting, gathering, PvP, duties, instances, NPC conversations, or a selected target.</Description>
+    <Tags>hotbar;ui;hud;quality-of-life</Tags>
+    <RepoUrl>https://github.com/bagasbgy/ffxiv-autouifade</RepoUrl>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+</Project>

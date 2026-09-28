@@ -1,0 +1,11 @@
+{
+	"Author": "R. Dimas Bagas Herlambang",
+	"Name": "Auto UI Fade",
+	"Punchline": "Fades hotbars until they are needed.",
+	"Description": "Fades selected native FFXIV hotbars, job gauges, parameter bars, and the experience bar to a configurable opacity while idle and restores them for hover, combat, weapon draw, crafting, gathering, PvP, duties, instances, NPC conversations, or a selected target.",
+	"InternalName": "AutoUIFade",
+	"AssemblyVersion": "0.1.0",
+	"RepoUrl": "https://github.com/bagasbgy/ffxiv-autouifade",
+	"ApplicableVersion": "any",
+	"Tags": ["hotbar", "hud", "ui", "quality-of-life"]
+}

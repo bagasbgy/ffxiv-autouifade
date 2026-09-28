@@ -1,0 +1,72 @@
+name: Release Auto UI Fade
+
+on:
+    push:
+        tags:
+            - "v*.*.*"
+
+permissions:
+    contents: write
+    pages: write
+    id-token: write
+
+jobs:
+    release:
+        runs-on: windows-latest
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+
+        steps:
+            - name: Check out source
+              uses: actions/checkout@v4
+
+            - name: Set up .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: 10.0.x
+
+            - name: Restore dependencies
+              run: dotnet restore AutoUIFade/AutoUIFade.csproj
+
+            - name: Build release package
+              run: dotnet build AutoUIFade/AutoUIFade.csproj -c Release --no-restore
+
+            - name: Prepare release asset and repository catalog
+              shell: pwsh
+              env:
+                  RELEASE_TAG: ${{ github.ref_name }}
+                  REPOSITORY: ${{ github.repository }}
+              run: |
+                  $packagePath = Join-Path $env:GITHUB_WORKSPACE 'AutoUIFade/bin/Release/AutoUIFade/latest.zip'
+                  if (-not (Test-Path $packagePath)) {
+                    throw "Dalamud package was not generated at $packagePath"
+                  }
+
+                  Copy-Item $packagePath (Join-Path $env:GITHUB_WORKSPACE 'AutoUIFade.zip')
+
+                  $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'AutoUIFade/bin/Release/AutoUIFade.json'
+                  $manifest = Get-Content -Raw $manifestPath | ConvertFrom-Json
+                  $downloadUrl = "https://github.com/$env:REPOSITORY/releases/download/$env:RELEASE_TAG/AutoUIFade.zip"
+                  $manifest | Add-Member -NotePropertyName DownloadLinkInstall -NotePropertyValue $downloadUrl -Force
+                  $manifest | Add-Member -NotePropertyName DownloadLinkUpdate -NotePropertyValue $downloadUrl -Force
+                  $manifest | Add-Member -NotePropertyName LastUpdate -NotePropertyValue ([DateTime]::UtcNow.ToString('o')) -Force
+
+                  $sitePath = Join-Path $env:GITHUB_WORKSPACE 'site'
+                  New-Item -ItemType Directory -Path $sitePath -Force | Out-Null
+                  ConvertTo-Json -InputObject @($manifest) -Depth 10 | Set-Content (Join-Path $sitePath 'repo.json') -Encoding utf8
+
+            - name: Publish GitHub Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  generate_release_notes: true
+                  files: AutoUIFade.zip
+
+            - name: Upload Pages artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: site
+
+            - name: Deploy Pages catalog
+              id: deployment
+              uses: actions/deploy-pages@v4
