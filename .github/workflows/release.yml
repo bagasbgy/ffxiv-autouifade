@@ -55,8 +55,9 @@ jobs:
                   $manifest = Get-Content -Raw $manifestPath | ConvertFrom-Json
                   $downloadUrl = "https://github.com/$env:REPOSITORY/releases/download/$env:RELEASE_TAG/AutoUIFade.zip"
                   $manifest | Add-Member -NotePropertyName DownloadLinkInstall -NotePropertyValue $downloadUrl -Force
+                  $manifest | Add-Member -NotePropertyName DownloadLinkTesting -NotePropertyValue $downloadUrl -Force
                   $manifest | Add-Member -NotePropertyName DownloadLinkUpdate -NotePropertyValue $downloadUrl -Force
-                  $manifest | Add-Member -NotePropertyName LastUpdate -NotePropertyValue ([DateTime]::UtcNow.ToString('o')) -Force
+                  $manifest | Add-Member -NotePropertyName LastUpdate -NotePropertyValue ([DateTimeOffset]::UtcNow.ToUnixTimeSeconds()) -Force
 
                   $sitePath = Join-Path $env:GITHUB_WORKSPACE 'site'
                   New-Item -ItemType Directory -Path $sitePath -Force | Out-Null
