@@ -44,8 +44,8 @@ The Dalamud package is generated at `AutoUIFade/bin/Release/AutoUIFade/latest.zi
 Create and push a semantic version tag, for example:
 
 ```powershell
-git tag v0.1.0
-git push origin v0.1.0
+git tag v0.1.1
+git push origin v0.1.1
 ```
 
 GitHub Actions builds the plugin, creates the GitHub Release asset, and updates the custom repository catalog.
