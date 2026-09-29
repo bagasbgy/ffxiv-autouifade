@@ -140,9 +140,9 @@ public unsafe sealed class Plugin : IDalamudPlugin
 
         PluginInterface.UiBuilder.Draw -= DrawUI;
         PluginInterface.UiBuilder.OpenConfigUi -= ConfigWindow.Toggle;
-        WindowSystem.RemoveAllWindows();
 
         UIManager.RestoreAll();
+        WindowSystem.RemoveAllWindows();
         Configuration.Save();
 
         ConfigWindow.Dispose();

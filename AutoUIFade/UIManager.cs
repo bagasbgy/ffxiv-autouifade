@@ -107,9 +107,13 @@ internal unsafe sealed class UIManager
 
             try
             {
-                var addon = (AtkUnitBase*)addonState.Address;
-                var rootNode = GetVisualRootNode(addonState.Name, addonState.Address);
-                if (addon == null || rootNode == null)
+                var addon = Plugin.GameGui.GetAddonByName(addonState.Name);
+                if (addon.IsNull || !addon.IsReady || addon.Address == nint.Zero ||
+                    addon.Address != addonState.Address)
+                    continue;
+
+                var rootNode = GetVisualRootNode(addonState.Name, addon.Address);
+                if (rootNode == null)
                     continue;
 
                 if (IsPlayerStatus(addonState.Name))
@@ -296,12 +300,12 @@ internal unsafe sealed class UIManager
         if (IsJobGauge(addonName))
         {
             var jobHud = (AddonJobHud*)address;
-            if (jobHud->JobHudRootNode != null)
+            if (jobHud != null && jobHud->JobHudRootNode != null)
                 return jobHud->JobHudRootNode;
         }
 
         var addon = (AtkUnitBase*)address;
-        return addon->RootNode;
+        return addon == null ? null : addon->RootNode;
     }
 
     private bool IsJobGauge(string addonName)
